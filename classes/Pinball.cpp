@@ -60,7 +60,7 @@ void Pinball::speedCtrl()
 	_speedY -= 0.15;	//向下加速度
 }
 
-/*------ref------*/
+/*------ref by Lantern------*/
 void Pinball::UpdateAllObservers(){
 	for (int i = 0; i < _observerList.size(); i++){
 		_observerList[i]->OnUpdate(this, (int)_maxHeight);
