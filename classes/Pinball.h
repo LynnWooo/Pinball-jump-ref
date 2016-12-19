@@ -1,10 +1,13 @@
 #ifndef ___PINBALL_H_
 #define ___PINBALL_H_
 #include "cocos2d.h"
+#include<vector>
+class ScoreObserver;
 
 #define BALL_PICTURE "Ball.png"
 #define SMALL_SIZE Director::getInstance()->getVisibleSize().width / 20 / this->getContentSize().width
 USING_NS_CC;
+using namespace std;
 
 class Pinball :public Sprite
 {
@@ -26,6 +29,11 @@ public:
 	inline void downSpeed(double speed){ _relativeSpeed = speed; }
 
 	void update(float dt);
+
+	void addObserver(ScoreObserver* observer);
+	void removeObserver(ScoreObserver* observer);
+	int getMaxHeight(){ return _maxHeight; }
+	void initHeight(){ _maxHeight = 0; }
 private:
 	void speedCtrl();
 	//
@@ -35,5 +43,11 @@ private:
 	double _speedX;
 	double _speedY;
 	double _relativeSpeed;
+
+	double _maxHeight;
+	double _height;
+	vector<ScoreObserver*> _observerList;
+
+	void UpdateAllObservers();
 };
 #endif
