@@ -3,7 +3,6 @@
 #include"cocos2d.h"
 #include "Boardmap.h"
 #include "Pinball.h"
-#include"ScoreBoard.h"
 //#include "ProcessController.h"
 
 USING_NS_CC;
@@ -13,7 +12,7 @@ public:
 	CREATE_FUNC(GameScene);
 	virtual bool init();
 
-//	void addScore(int num){ _score += num; }
+	void addScore(int num){ _score += num; }
 
 	inline Pinball* getBall(){ return _ball; }
 
@@ -27,7 +26,7 @@ public:
 
 	inline double getCameraSpeed()const{ return _cameraSpeed; }
 
-    inline int getBallHeight()const{return _ball->getMaxHeight();}
+    inline int getScore()const{return _score;}
     
     void update(float dt);
 
@@ -38,8 +37,7 @@ private:
 	Pinball* _ball;
 	Boardmap* _boards;
 	double _cameraSpeed;
-	ScoreBoard _scoreBoard;
-//	int _score;
-//	Label* _scoreBoard;
+	int _score;
+	Label* _scoreBoard;
 };
 #endif
