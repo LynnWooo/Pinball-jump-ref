@@ -13,12 +13,24 @@ bool GameScene::init()
 	this->addChild(_boards);
 	this->addChild(_ball);
 
-	_score = 0;
+	//_score = 0;
 
-	__String* str = __String::createWithFormat("%d", _score);
-	_scoreBoard = Label::create(str->getCString(), "Marker Felt", 30);
-    _scoreBoard->setPosition(40, Director::getInstance()->getVisibleSize().height-40);
-	this->addChild(_scoreBoard);
+	//__String* str = __String::createWithFormat("%d", _score);
+	//_scoreBoard = Label::create(str->getCString(), "Marker Felt", 30);
+ //   _scoreBoard->setPosition(40, Director::getInstance()->getVisibleSize().height-40);
+	//this->addChild(_scoreBoard);
+
+	/*----------ref by lantern------------*/
+	_scoreBoard = ScoreBoard();
+	Label* label = Label::create("Height: 0", "Marker Felt", 30);
+	label->setPosition(80, Director::getInstance()->getVisibleSize().height - 30);
+	_scoreBoard.bindLabel(label);
+	label->setColor(Color3B(249, 194, 111));
+	this->addChild(label);
+
+	_ball->addObserver(&_scoreBoard);
+	_ball->initHeight();
+	/*---------------------------------------------------*/
 
 	ProcessController::getInstance()->setScene(this);
 	this->addChild(ProcessController::getInstance());
@@ -57,8 +69,8 @@ void GameScene::update(float dt)
     if (!_boards->isMoving())
         _cameraSpeed = 0;
     
-    __String* str = __String::createWithFormat("%d", _score);
-    _scoreBoard->setString(str->getCString());
+//    __String* str = __String::createWithFormat("%d", _score);
+//    _scoreBoard->setString(str->getCString());
     
 }
 void GameScene::initBall()//init the ball  randomly in 1/4~3/4 of the screen

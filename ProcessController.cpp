@@ -92,7 +92,7 @@ void ProcessController::update(float dt)
 		checkImpact();
     if(getBall()->getPositionY()<0)
     {
-        auto scene=overScene::create(_scene->getScore());
+        auto scene=overScene::create(_scene->getBallHeight());
         Director::getInstance()->replaceScene(TransitionSlideInB::create(1,scene));
         removeFromParent();
         //unscheduleUpdate();
@@ -119,7 +119,7 @@ void ProcessController::checkImpact()
 			if (getBoardmap()->haveEmptyMap())
 				getBoardmap()->createBoards(_difficulty);
 			if (_difficulty > 0.45)_difficulty -= 0.015;
-			_scene->addScore((getBoardmap()->getVisiblePosition(board->getPosition()).y - 100) / _difficulty / _difficulty);
+//			_scene->addScore((getBoardmap()->getVisiblePosition(board->getPosition()).y - 100) / _difficulty / _difficulty);
 		}
 		getBall()->hit();
 	}
