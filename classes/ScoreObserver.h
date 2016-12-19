@@ -2,5 +2,5 @@
 
 class ScoreObserver{
 public:
-	virtual void OnUpdate(Pinball* Sender, int height) = 0;
+	virtual void OnUpdate(const Pinball* Sender, int height) = 0;
 };

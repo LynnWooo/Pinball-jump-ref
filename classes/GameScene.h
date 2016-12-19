@@ -4,6 +4,7 @@
 #include "Boardmap.h"
 #include "Pinball.h"
 #include"ScoreBoard.h"
+#include"BallCtl.h"
 //#include "ProcessController.h"
 
 USING_NS_CC;
@@ -21,8 +22,8 @@ public:
 
 	void cameraMove(double length)
 	{
-		_boards->moveDown(length);
-		_cameraSpeed = length / 60;
+		//_boards->moveDown(length);
+		//_cameraSpeed = length / 60;
 	}
 
 	inline double getCameraSpeed()const{ return _cameraSpeed; }
@@ -34,6 +35,15 @@ public:
     void initBoardmap();
     
     void initBall();
+
+	BallCtl* getBallCtl(){
+		BallCtl* ret = new BallCtl();
+		ret->bindBall(_ball);
+		ret->bindBack(_boards);
+
+		this->addChild(ret);
+		return ret;
+	}
 private:
 	Pinball* _ball;
 	Boardmap* _boards;

@@ -6,7 +6,7 @@ private:
 	Label* _label;
 
 public:
-	void OnUpdate(Pinball* Sender, int height);
+	void OnUpdate(const Pinball* Sender, int height);
 
 	void bindLabel(Label* l){
 		_label = l;

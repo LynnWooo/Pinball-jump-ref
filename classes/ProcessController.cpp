@@ -13,13 +13,13 @@ ProcessController* ProcessController::getInstance()
 			_ptr = 0;
 		}
 	}
-    if(!_ptr->_running)
-    {
-        
-        _ptr->onEnter();
-        _ptr->_running=true;
-        _ptr->scheduleUpdate();
-    }
+	if (!_ptr->_running)
+	{
+
+		_ptr->onEnter();
+		_ptr->_running = true;
+		_ptr->scheduleUpdate();
+	}
 	return _ptr;
 }
 
@@ -27,7 +27,7 @@ bool ProcessController::init()
 {
 	if (!Node::create())
 		return false;
-	
+
 	_leftpressed = false;
 	_rightpressed = false;
 	_difficulty = 1;
@@ -63,16 +63,16 @@ bool ProcessController::init()
 			gettimeofday(&time, 0);
 			unsigned int tsrans = time.tv_usec * 1000;
 			std::srand(tsrans);
-			_rightpressed = false; 
+			_rightpressed = false;
 		} break;
 		default: break;
 		}
 	};
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(kbd, this);
 
-    
-    
-   
+
+
+
 	CCLOG("inited");
 	scheduleUpdate();
 	return true;
@@ -80,50 +80,76 @@ bool ProcessController::init()
 
 void ProcessController::ballctrl()
 {
-	_scene->getBall()->setAccelaration(_leftpressed ? -0.3 : (_rightpressed ? 0.3 : 0));
-	_scene->getBall()->downSpeed(_scene->getCameraSpeed());
+	//_scene->getBall()->setAccelaration(_leftpressed ? -0.3 : (_rightpressed ? 0.3 : 0));
+	//_scene->getBall()->downSpeed(_scene->getCameraSpeed());
+	if (_leftpressed) _ballCtl->leftAcce();
+	else if (_rightpressed) _ballCtl->RightAcce();
+	else return;
 }
 
 void ProcessController::update(float dt)
 {
 	ballctrl();
 	//CCLOG("running");
-	if (getBall()->getSpeed() < 0)
+	//	if (getBall()->getSpeed() < 0)
+	if (_ballCtl->isMovingUp() == true){
+		if (getBoardmap()->haveEmptyMap())
+			getBoardmap()->createBoards(_difficulty);
+
+		if (_difficulty > 0.45)_difficulty -= 0.015;
+	}
+	else{
+		//is moving down
 		checkImpact();
-    if(getBall()->getPositionY()<0)
-    {
-        auto scene=overScene::create(_scene->getBallHeight());
-        Director::getInstance()->replaceScene(TransitionSlideInB::create(1,scene));
-        removeFromParent();
-        //unscheduleUpdate();
-        //_scene=0;
-        _running=false;
-        onExit();
-    }
-	
+	}
+	if (getBall()->getPositionY() < 0)
+	{
+		auto scene = overScene::create(_scene->getBallHeight());
+		Director::getInstance()->replaceScene(TransitionSlideInB::create(1, scene));
+		removeFromParent();
+		//unscheduleUpdate();
+		//_scene=0;
+		_running = false;
+		onExit();
+	}
+
 }
 
 void ProcessController::checkImpact()
 {
-	auto board =getBoardmap()->checkImpact(getBall());
-	
+	auto board = getBoardmap()->checkImpact(getBall());
+
 	if (!board)
 		return;
 
-	getBall()->setPosition(getBall()->getPositionX(), getBoardmap()->getVisiblePosition(board->getPosition()).y + board->getHeight() / 2 + getBall()->getRadius());
-	if (board->getType() == BOARD_TYPE_1)
-	{
-		if (getBoardmap()->getVisiblePosition(board->getPosition()).y >= Director::getInstance()->getVisibleSize().height*0.35)
-		{
-			_scene->cameraMove(getBoardmap()->getVisiblePosition(board->getPosition()).y - 100);
-			if (getBoardmap()->haveEmptyMap())
-				getBoardmap()->createBoards(_difficulty);
-			if (_difficulty > 0.45)_difficulty -= 0.015;
-//			_scene->addScore((getBoardmap()->getVisiblePosition(board->getPosition()).y - 100) / _difficulty / _difficulty);
-		}
-		getBall()->hit();
+	//getBall()->setPosition(getBall()->getPositionX(), getBoardmap()->getVisiblePosition(board->getPosition()).y + board->getHeight() / 2 + getBall()->getRadius());
+	//	if (board->getType() == BOARD_TYPE_1)
+	//{
+	//	if (getBoardmap()->getVisiblePosition(board->getPosition()).y >= Director::getInstance()->getVisibleSize().height*0.35)
+	//	{
+	//		_scene->cameraMove(getBoardmap()->getVisiblePosition(board->getPosition()).y - 100);
+	//		if (getBoardmap()->haveEmptyMap())
+	//			getBoardmap()->createBoards(_difficulty);
+	//		if (_difficulty > 0.45)_difficulty -= 0.015;
+	//		_scene->addScore((getBoardmap()->getVisiblePosition(board->getPosition()).y - 100) / _difficulty / _difficulty);
+	//	}
+
+	//		getBall()->hit();
+	if (board->getType() == BOARD_TYPE_1)	{ _ballCtl->hit(); }
+	else if (board->getType() == BOARD_TYPE_2){ board->hit(); return; }
+
+	BaseCtlDec* dec = board->hit();
+
+	//不为空说明有装饰类
+	if (dec != NULL){
+		dec->setNext(_ballCtl);
+		_ballCtl->setPre(dec);
+		_ballCtl = dec;
+		_scene->getBall()->addChild(dec);
 	}
-	board->hit();
-	
+
+	_ballCtl->hit();
+
+
 }
 

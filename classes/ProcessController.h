@@ -6,6 +6,7 @@
 #include "Boardmap.h"
 #include "Board.h"
 #include "simpleAudioEngine.h"
+#include "BaseCtl.h"
 USING_NS_CC;
 
 class ProcessController : public Node
@@ -17,7 +18,14 @@ public:
 
 	inline Boardmap* getBoardmap()const{ return _scene->getBackground(); }
 
-	void setScene(GameScene* scene){ _scene = scene; }
+	void setScene(GameScene* scene){ 
+		_scene = scene;
+		_ballCtl = _scene->getBallCtl();
+	}
+
+	void bindCtl(BaseCtl* controller){
+		_ballCtl = controller;
+	}
 
 	void update(float dt);
 
@@ -32,6 +40,7 @@ private:
 	//Parameters below
 	static ProcessController* _ptr;
 	GameScene* _scene;
+	BaseCtl* _ballCtl;
 	bool _leftpressed;
 	bool _rightpressed;
 	double _difficulty;

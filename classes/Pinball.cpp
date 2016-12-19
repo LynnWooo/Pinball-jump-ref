@@ -1,26 +1,26 @@
 #include "Pinball.h"
 #include"ScoreObserver.h"
 
-void Pinball::update(float dt)
-{
-	speedCtrl();
-	this->setPosition(this->getPositionX() + _speedX, this->getPositionY() + _speedY - _relativeSpeed);
-
-	/*------ref by Lantern------*/
-//	_height += _speedY - _relativeSpeed;
-	_height += _speedY;
-	if (_height > _maxHeight){
-		_maxHeight = _height;
-		UpdateAllObservers();
-	}
-	/*--------------------------------*/
-
-	if (this->getPosition().x < -this->getContentSize().width*_scale)
-		this->setPosition(this->getContentSize().width*_scale + Director::getInstance()->getVisibleSize().width, this->getPosition().y);
-	if (this->getPosition().x>Director::getInstance()->getVisibleSize().width + this->getContentSize().width*_scale)
-		this->setPosition(-this->getContentSize().width*_scale, this->getPosition().y);
-
-}
+//void Pinball::update(float dt)
+//{
+//	speedCtrl();
+//	this->setPosition(this->getPositionX() + _speedX, this->getPositionY() + _speedY - _relativeSpeed);
+//
+//	/*------ref by Lantern------*/
+//	_height += _speedY;
+//	if (_height > _maxHeight){
+//		_maxHeight = _height;
+//		UpdateAllObservers();
+//	}
+//	/*--------------------------------*/
+//
+//
+//	if (this->getPosition().x < -this->getContentSize().width*_scale)
+//		this->setPosition(this->getContentSize().width*_scale + Director::getInstance()->getVisibleSize().width, this->getPosition().y);
+//	if (this->getPosition().x>Director::getInstance()->getVisibleSize().width + this->getContentSize().width*_scale)
+//		this->setPosition(-this->getContentSize().width*_scale, this->getPosition().y);
+//
+//}
 
 bool Pinball::init()
 {
@@ -53,13 +53,14 @@ Pinball* Pinball::create(int posX, int posY)
 
 void Pinball::speedCtrl()
 {
-	if ((!_accX) && _speedX != 0)
+	if ((!_accX) && _speedX != 0)	//没按按键时平移速度逐渐减慢
 	_speedX+=( _speedX > 0 ? -0.05 : 0.05);
-	_speedX += _accX;
-	_speedY -= 0.15;
+
+	_speedX += _accX;	//根据按键输入改变平移方向速度
+	_speedY -= 0.15;	//向下加速度
 }
 
-/*------ref by Lantern------*/
+/*------ref------*/
 void Pinball::UpdateAllObservers(){
 	for (int i = 0; i < _observerList.size(); i++){
 		_observerList[i]->OnUpdate(this, (int)_maxHeight);

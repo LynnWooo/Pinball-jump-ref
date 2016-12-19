@@ -28,12 +28,27 @@ public:
 
 	inline void downSpeed(double speed){ _relativeSpeed = speed; }
 
-	void update(float dt);
+//	void update(float dt);
 
 	void addObserver(ScoreObserver* observer);
+
 	void removeObserver(ScoreObserver* observer);
+
 	int getMaxHeight(){ return _maxHeight; }
+
 	void initHeight(){ _maxHeight = 0; }
+
+	double getScale(){ return _scale; }
+
+	void addHeight(double len){
+		_height += len;
+		if (_height > _maxHeight){
+			_maxHeight = _height;
+			UpdateAllObservers();
+		}
+	}
+
+	void dieOff();
 private:
 	void speedCtrl();
 	//

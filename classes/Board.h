@@ -2,6 +2,7 @@
 #define _BOARD__H_
 #include "cocos2d.h"
 #include <string>
+#include"Entity.h"
 USING_NS_CC;
 
 #define BOARD_TYPE_1 "stdboard.png"
@@ -13,28 +14,30 @@ USING_NS_CC;
 
 
 
-class Board :public Sprite
+class Board :public Entity
 {
 public:
-	CREATE_FUNC(Board);
-
 	virtual bool init();
 		
 	static Board* create(int posX, int posY, std::string type);
 	
-	inline float getWidth()const{return this->getContentSize().width*_scale;}
+	float getWidth()const{return this->getContentSize().width*_scale;}
 
-	inline float getHeight()const{ return this->getContentSize().height*_scale; }
+	float getHeight()const{ return this->getContentSize().height*_scale; }
 
 	inline std::string getType()const{ return _type; }
 
     void update(float dt);
 
-	void hit();
+	BaseCtlDec* hit();
 
 	void setMoveable(bool direction);
-	
 
+	bool isMoving(){ return _moveable; }
+
+	BaseCtlDec* getDec(){ return NULL; }
+	
+	CREATE_FUNC(Board);
 private:
 	//parameters
 	bool _has_item;

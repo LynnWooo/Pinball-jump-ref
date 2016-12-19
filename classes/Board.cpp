@@ -1,7 +1,7 @@
 #include "Board.h"
 #include"Boardmap.h"
 #include "simpleAudioEngine.h"
-void Board::hit()
+BaseCtlDec* Board::hit()
 {
     if(_type==BOARD_TYPE_1)
         CocosDenshion::SimpleAudioEngine::sharedEngine()->playEffect("hit.mp3");
@@ -20,6 +20,8 @@ void Board::hit()
         board->runAction(MoveBy::create(3, Vec2(50,-400)));
         
 	}
+
+	return NULL;
 }
 
 void Board::setMoveable(bool direction)//direction==true,go up&down,direction==false,go left&right
